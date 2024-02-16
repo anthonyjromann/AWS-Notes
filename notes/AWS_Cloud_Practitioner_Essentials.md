@@ -1,7 +1,7 @@
 ---
 title: AWS Cloud Practitioner Essentials
 created: '2024-02-15T22:39:37.666Z'
-modified: '2024-02-16T02:58:23.959Z'
+modified: '2024-02-16T19:06:14.854Z'
 ---
 
 # AWS Cloud Practitioner Essentials
@@ -160,5 +160,84 @@ modified: '2024-02-16T02:58:23.959Z'
       * Kubernetes is open-source software that enables you to deploy and manage containerized applications at scale. 
     * **Docker is a container runtime, while Kubernetes is a platform for running and managing containers from many container runtimes.** Kubernetes supports Docker.
   * AWS Fargate is a serverless compute engine for containers. It works with both Amazon ECS and EKS. You do not need to provision or manage servers, it manages server infrastructure for you. 
+
+## Module 3 - Global Infrastructure and Reliability
+
+### Introduction
+* AWS has high availability and fault-tolerance.
+
+### AWS Global Infrastructure
+* AWS has global regions which are connected through fiber networks. 
+* Each region has multiple availability zones which are connected with low latency, high throughput, higly redundant networking.
+  * If one availability zone fails, your application can continue to run in another availability zone with no interruption. 
+  * There are three or more availability zones within an AWS region.
+  * **An availability zone is a logical data center. Each zone is backed up by one or more physical data centers, with the largest backed up by five.**
+    * **No two zones share a data center.**
+    * Availability zones are tens of miles apart from eachother. This allows for low latency.
+  * **AWS reccomends running in AT LEAST two availability zones in a region.**
+* Data does not leave a region unless you explicitly tell it to do so.
+* There are four business factors that come into consideration when selecting a region:
+  * Compliance - Government/legal requirements.
+  * Proximity - Being close to your customers and having low latency.
+  * Available services - Different regions have different AWS services available.
+  * Pricing - Different regions have different costs due to taxes and infrastructure.
+* ELB is a regional construct. It can load balances across availability zones across multiple EC2 instances. This is a **regionally scoped service**.
+
+### Edge Locations
+* An edge location is a site that Amazon CloudFront uses to store cached copies of your content closer to customers over the world for faster delivery.
+  * Caching copies of data uses the concept of Content Delivery Networks (CDN). This provides low latency and high transfer speeds.
+* Amazon Route 53 is a DNS service that directs customers to the correct web locations with low latency. 
+* AWS Outposts allows you to install a mini-region inside of your own data center. 
+
+### How to Provision AWS Resources
+* In AWS, EVERYTHING is an API call.
+* You can interact with AWS through the Web Management Console, the Command Line Interface (CLI), or AWS Software Development Kits (SDKs)
+* AWS Elastic Beanstalk builds your environment for you and makes it easy to save environment configurations. 
+  * Performs capacity adjustment, load balancing, automatic scaling, and application health monitoring. 
+* AWS CloudFormation is an Infrastructure as code tool used to define a wide variety of AWS resources.
+  * You define resources in a template ans CloudFormation will provision them in parallel. It calls APIs for you. You can create identical environments across regions.
+  * You treat your infrastructure as code. 
+* Overall, you can use the CLI to script interactions, use SDKs to write programs to interact, or use Elastic BeanStalk or CloudFormation to manage resources for you.
+
+## Module 4 - Networking
+
+### Introduction
+* Amazon Virtual Private Cloud (VPCs) let you provision a logically isolated section of the AWS cloud where you can launch AWS resurces in a virtual network that you define. 
+  * These can be public facing (have access to the internet) or private facing (usually for backend services like databses or application servers).
+  * The public and private grouping of resources are known as subnets and are ranges of IP addresses in your VPC.
+
+### Connectivity to AWS
+* A VPC is essentially your own private network in AWS. It allows you to define a private IP range for your AWS resources, and you place things like EC2 instances and ELBs inside of it.
+  * You place resources into different subnets. Subnets are chunks of IP addresses in your VPC that allow you to group resources together. Subnets control whether resources are publicly or privately available. 
+    * A subnet is a section of a VPC that can contain resources such as Amazon EC2 instances.
+* If you have resources that you only want to be reachable if someone is logged into a private network, you can configure this with gateways.
+  * An internet gatway (IGW) is like a doorway open to the public. Without it, no one can reach the resources placed inside.
+  * A VPC with all internal private resources doesn't want an internet gateway attached. A Virtual Private Gateway allows you to create a VPN connection between a private network.
+    * Private gateways are private and encrypted, but they still use a regular internet connection that is being shared and has bandwidth.
+      * With AWS, you can use AWS Direct Connect. This allows you to establish a completely private, dedicated fiber connection from your data center to AWS. This can help with regulatory issues and prevent any bandwidth issues.
+      * A virtual private gateway only allows traffic into the VPC if it comes from an approved network.
+* Public subnets have access to the internet gateway, private subnets do not. 
+
+### Subnets and Network Access Control Lists
+  * When a customer requests data from an application hosted in the AWS Cloud, this request is sent as a packet. A packet is a unit of data sent over the internet or network. 
+  * This packet enters a VPC through an internet gateway. Before a packet can enter into a subnet or exit from a subnet, it checks for permissions. These permissions indicate who sent the packet and how the packet is trying to communicate with the resources in a subnet. 
+  * The VPC component that checks packet permissions for subnets is a **network access control list (ACL)**. It is a virtual firewall that controls inbound and outbound traffic at the subnet level.
+    * Each AWS account includes a default network ACL. By default, it allows all inbound and outbound traffic, but you can modify it by adding your own rules. For custom network ACLs, all inbound and outbound traffic is denied until you add rules to specify which traffic to allow. 
+    * Network ACLs perform stateless packet filtering. They remember nothing and check packets that cross the subnet border each way (inbound and outbound). Even if a packet previously crossed, it is check again.
+  * The VPC component that checks packet permissions for an Amazon EC2 instance is a **security group**. It is a virtual firewall that controls inbound and outbound traffic for an Amazon EC2 instance.
+    * By default, a security group denies all inbound traffic and allows all outbound traffic. You can add custom rules to configure which traffic should be allowed.
+    * If you have multiple Amazon EC2 instances within the same VPC, you can associate them with the same security group or use different security groups for each instance. 
+    * Security groups perform stateful packet filtering. They remember previous decisions made for incoming packets. 
+
+  ### Global Networking
+  * Domain Name System (DNS) translates domain names to IP addresses. 
+    * A DNS resolver receives the domain name request, asks the company DNS server for the IP address, and the company DNS server responds by providing the IP address.
+  * Amazon Route 53 can direct traffic to different endpoints. It connects user requests to infrastructure running in AWS and can route outside of AWS.
+    * Route 53 interacts with Amazon CloudFront. A user requests data from a company's website, Route 53 uses DNS resolution to identify the corresponding IP address, and the customers request is sent to the nearest edge location through CloudFront, and CloudFront connects to the Application Load Balancer, which sends the incoming packet to an Amazon EC2 instance.
+
+
+
+
+
 
 
