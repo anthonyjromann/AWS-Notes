@@ -1,7 +1,7 @@
 ---
 title: AWS Cloud Practitioner Essentials
 created: '2024-02-15T22:39:37.666Z'
-modified: '2024-02-16T19:06:14.854Z'
+modified: '2024-02-19T01:11:15.402Z'
 ---
 
 # AWS Cloud Practitioner Essentials
@@ -235,7 +235,139 @@ modified: '2024-02-16T19:06:14.854Z'
   * Amazon Route 53 can direct traffic to different endpoints. It connects user requests to infrastructure running in AWS and can route outside of AWS.
     * Route 53 interacts with Amazon CloudFront. A user requests data from a company's website, Route 53 uses DNS resolution to identify the corresponding IP address, and the customers request is sent to the nearest edge location through CloudFront, and CloudFront connects to the Application Load Balancer, which sends the incoming packet to an Amazon EC2 instance.
 
+## Module 5 - Storage and Databases
 
+### Introduction
+* AWS offers a variety of services to store data to meet their clients needs.
+
+### Instance Stores and Amazon Elastic Block Store
+* As applications run, they need access to block-level storage. Memory is partitioned into blocks and only the blocks that change need to be updated (hard drive).
+  * EC2 instances can have **instance store volumes**, which are physically attached to the host like a normal hard-drive. All data written to the instance store volume is deleted when the instance shuts down (virtual machines change hosts). Temporary storage.
+    * Used for temporary data. Do NOT write important data to this.
+  * Amazon Elastic Block Store (EBS) creates virtual hard drives (called EBS volumes) that attach to EC2 instances. They are not tied directly to the host the instance is writing on. This data CAN persist between starts and stops.
+    * You specify the size, type, and configuration of the memory and attach to an EC2 instance. You can then configure your application to write to the volume.
+    * EBS allows you to take snapshots (incremental backups) in case your data becomes corrupted. These snapshots can be restored if problems arise.
+      * When creating snapshots, only data that has changed since the most recent snapshot is backed up.
+    * EBS is also block-level storage. 
+
+### Amazon Simple Storage Service (Amazon S3)
+* Allows you to store and retrieve an unlimited amount of data at any scale.
+* Data is stored as objects and objects are stored in buckets. You can upload a maximum object size of 5 TB.
+  * Objects are versioned, previous data is versioned.
+  * Data can have permissions and different storage use cases.
+* There are different storage tiers.
+  * Amazon S3 Standard comes with 11 nines of durability. This has a 99.999999999% chance of being intact after one year. It has a higher cost.
+   * Amazon S3 static website hosting uploads all static web assets into a bucket and hosts this as a static website. 
+  * Amazon S3 Standard-Infrequent Access (S3 Standard-IA) is for data that is not used frequently but requires quick access when needed. Good for backups.
+    * Has a lower storage price but a higher retrieval price.
+  * S3 One Zone-Infrequent Access (S3 One Zone-IA) stores data in a single Availability Zone and has a lower price than Amazon S3 Standard-IA.
+    * Data is only stored in one Availability Zone. S3 Standard and S3 Standard-IA store data in a minimum of three Availability Zones.
+    * Good for when you want to save costs on storage and you can easily reproduce data in the event of an Availability Zone failure.
+  * Amazon S3 Intelligent-Tiering is goof for data with unknown or changing access patterns. It requires a small monthly monitoring and automation fee per object.
+    * Monitors objects' access patterns. If you haven't accessed an object for 30 consecutive days, it automatically moves it to the infrequent access tier, S3 Standard-IA. 
+      * If you access an object in the infrequent access tier, it automatically moves it to S3 Standard.
+  * S3 Glacier Instant Retrieval works well for archived data that requires immediate access. It can retrieve objects in a few milliseconds. 
+  * Amazon S3 Glacier Flexible Retrieval is good for audit data. It can have vaults with archives that are good for long-term access but not necessarily speedy access.
+    * You can use Write once/read many (WORM) where data cannot be changed after being written.
+    * Different levels of retrieval speed. Can be from 1 minute to 12 hours. 
+  * S3 Glacier Deep Archive is the lowest-cost object storage class ideal for archiving. You can retrieve objects within 12 hours. Ideal for long-term retention. Stored in at least three geographically separated Availability Zones. 
+  * S3 Outposts creates S3 buckets on Amazon S3 Outposts. This makes it easy to retrieve, store, and access data on AWS Outposts. 
+* Amazon S3 Lifecycle management can move data automatically between tiers. No need to change application code to store data.
+* In object storage, each object consists of data, metadata, and a key. 
+  * Data is a file. Metadata contains information about what the data is, how it is used, the object size, and so on. An object's key is its unique identifier.
+* Amazon EBS can have sizes of up to 16 TiB (17.6 TB), they survive termination of EC2 instance, solid state by default, with HDD options.
+* Amazon S3 has unlimited storage, up to 5000 GB objects, are ideal for WORM, have high durability.
+* S3 is web enabled (each file can have an access URL), regionally distributed, offers cost savings, and is serverless. 
+* Object storage treats any file as a complete object. If there is a change to the object, you must reupload the entire file. 
+  * Block storage breaks down those blocks into small parts. If you were working on a huge video file and make a bunch of micro edits, using EDS is the better case.
+
+### Amazon Elastic File System (Amazon EFS)
+* Multiple instances can access the data in EFS at the same time.
+* Scales up and down as needed.
+* Amazon EBS volumes attach to EC2 instances. They are an Availability Zone level resource (need to be in the same AZ to attach EC2 instances). Doesn't automatically scale.
+* **Amazon EFS can have multiple instances reading/writing simultaneously. It is a linux file system, a Regional resource, and automatically scales.**
+
+### Amazon Relational Database Service (Amazon RDS)
+* Used when you need to maintain relationships between various types of data and track this.
+  * A lift-and-shift migration puts your on-premise environment and database onto an EC2 instance.
+* Amazon RDS is a service that enable you to run relational databases in the AWS Cloud. It automates tasks such as hardware provisioning, database setup, patching, and backups. 
+  * Amazon RDS includes automated patching, backups, redundancy, failover, and disaster recovery.
+  * You can use AWS Lambda to query your database from a serverless application.
+  * Six Amazon RDS database engines. Incudes Amazon Aurora, PostgreSQL, MySQL, MariaDB, Oracle Database, and Microsoft SQL Server.
+* Amazon Aurora is a managed database, compatible with MySQL and PostgreSQL databases. 
+  * Up to five times faster than standard MySQL and three times than PostgreSQL databases.
+  * Reduces unnecessary input/output operations.
+  * 1/10th the cost of commercial databases. Data replicated across facilities for 6 copies at any time. Up to 15 read replicas to offload reads and scale performance. Continous backup to Amazon S3 and includes point-in-time recovery.
+
+### Amazon DynamoDB
+* DynamoDB is a serverless database. 
+  * You create tables, which is where you can store and query data. 
+  * Data is organized into items with attributes.
+  * DynamoDB manages underlying storage for you, redundantly, and scales automatically.
+  * single-digit ms response time
+  * NOT a relational database. Less rigid and high access rate. AKA NoSQL. Simple flexible schemas.
+  * **You write querys based on a small subset of attributes known as keys.** Tend to be simpler.
+  * Fully managed, highly scalable.
+* Amazon RDS has automatic high availability, custom ownership of data, customer ownership of schema, and custom control of network.
+  * Better for complex data spread across multiple tables. Built for business analytics. 
+  * Complex functionality creates lag.
+* Amazon DynamoDB has a key-value access system, massive throughput, PB size potential, and granular API access.
+  * Use case is for almost anything besides complex relationships. 
+
+### Amazon Redshift
+* Once data becomes too complex with traditional relational databases, you shift your focus to data warehouses.
+  * Useful for looking backwards in time.
+  * Maintenance of a data warehouse is difficult, maintaining the engine is tedious
+* **Amazon redshift is data warehousing as a service. It can be used for big data analytics.**
+  * An SQL query can be used to run against exobytes of data in warehouses.
+  * Up to 10x higher performance than traditional databases when it comes to high workloads.
+  * When you need big data solutions, Redshift allows you to start with a single API call. 
+
+### AWS Database Migration Service
+* If you have a database on-premise or in the cloud already, Amazon DMS can help you migrate existing databases onto AWS in a secure and easy fashion.
+  * The source database remains fully operational during the migration.
+  * Source and target don't need to be of the same type.
+    * The same type of database migration is known as homogenization.
+    * Heterogeneous migrations are a two-step process. Schema structures, data types, and database code must be converted using the AWS conversion tool. Then DMS is used.
+  * DMS can be used for development and test database migrations (test against prod. data), database consolidation (multiple into one), and continous replication (disaster recovery/geographic separation).
+
+### Additional Database Services
+* There is no one-size-fits-all database for all purposes.
+* Amazon DocumentDB is great for content management, catalogs, user profiles.
+* Amazon Neptune is great for social networks. It is a graph database. Also great for recommendation and fraud detection.
+* Amazon Quantum Ledger Database is an immutable system of record. Any entry can never be removed from the audits. 
+* Database accelerators such as adding caching layers can be provided with Amazon ElastiCache. 
+* Amazon DynamoDB Accelerator (DAX) accelerates DynamoDB.
+* Amazon Managed Blockchain is used to create and manage blockchain networks with open-source frameworks. It is a distributed ledger system that lets multiple parties run transactions and share data without a central authority.
+
+## Module 6 - Security
+
+### Introduction
+* With the shared responsibility model, AWS manages security **OF** the cloud. The customer is responsible for security **IN** the cloud.
+
+### AWS Shared Responsibility Model
+* Customer responsibility starts at the operating system. Only the user has the encryption key to log into to the operating system as the root user.
+  * The customers team must keep the OS patched. AWS cannot deploy a patch.
+  * On top of the OS, the user can run any applications and use any data. It is up to the user to secure these endpoints. 
+    * AWS provides the tools to encrypt and secure this content, the user must employ it.
+  
+
+### User Permissions and Access
+* When you create an AWS account, you are the root user. They have permission to do anything they want inside of the account. 
+  * AWS recommends MFA (Multi Factor Authenication) to login. 
+  * AWS Identity and Access Management (IAM) allows you to create IAM users which by default have no permissions. 
+    * You have to explicitly give the user permission to do anything. 
+      * This idea is called the principle of least privilege. You only give the user the minimum of what they need.
+* An IAM policy is a JSON document that describes what API calls a user can or cannot make. 
+  * It contains a version, and a statement containing `Effect` which allows or restricts a user from a service, an `Action` which is a specific command to be performed, and a `Resource` which is a unique identifier for a specific service.
+    * Effect is either allow or deny. 
+    * Action is any API call.
+    * Resource is what specific AWS resource that API call is for.
+  * You can organize users into IAM groups and attach a policy to a group. All users will have those permissions.
+  * A role is an identity that can be assigned to a user for a temporary period of time.
+    * No username or password. Can be assigned to AWS resources, users, external identities, and applications.
+    * When someone assumes an IAM role, they abandon all previous permissions that they had under a previous role and assume the permissions of the new rule. 
+* You can map corporate identities to IAM roles. This allows users to login with their coporate information. 
 
 
 
