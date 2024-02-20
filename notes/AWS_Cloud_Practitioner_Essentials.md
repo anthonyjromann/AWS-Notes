@@ -1,7 +1,7 @@
 ---
 title: AWS Cloud Practitioner Essentials
 created: '2024-02-15T22:39:37.666Z'
-modified: '2024-02-19T01:11:15.402Z'
+modified: '2024-02-20T19:30:21.038Z'
 ---
 
 # AWS Cloud Practitioner Essentials
@@ -369,6 +369,99 @@ modified: '2024-02-19T01:11:15.402Z'
     * When someone assumes an IAM role, they abandon all previous permissions that they had under a previous role and assume the permissions of the new rule. 
 * You can map corporate identities to IAM roles. This allows users to login with their coporate information. 
 
+### AWS Organizations
+* As your company grows, its important to have a separation of duties.
+* AWS Organizations is a central location to manage multiple accounts.
+  * Benefits include centralized management of all AWS accounts, consolidated billing for all member accounts (bulk discounts), hierarchial groupings of accounts (into Organizational Units (OU's)), AWS service and API actions access control. 
+    * When you place an account into an OU, all the accounts in the OU automatically inherit the permissions specified in the policy.
+    * The administrator uses service control policies (SCPs) to restrict which services, resources, and individual API actions that a user, role, or group can take. 
+* When you create an organization, AWS Organizations automatically creates a root (the parent container for all accounts in an organization).
+* ** You can apply IAM policies to IAM users, groups, or roles. You cannot apply an IAM policy to the AWS account root user. SCPs can be applied to an individual member account or an OU.**
+
+### Compliance
+* Depending on what types of solutions you host on AWS, you will need to make sure you are up to standards on compliance. 
+  * Consumer data needs to be in compliance with (GDPR)
+  * Healthcare needs to meet compliance with HIPPA
+* AWS complies with a long list of assurance programs. This means that segments of your compliance have already been completed. 
+* The region you choose to operate out of might help you meet compliances. AWS will not automatically replicate data across regions if you specify.
+  * YOU have complete control over the data you store in AWS. You can employ multiple encryption mechanisms to do so.
+* You can request that AWS provides documentation that AWS provides compliance and security. This can be done with AWS Artifact and whitepapers, which has compliance reports from third-parties.
+  * AWS Artifact provides agreements and reports. 
+* The Customer Compliance Center contains resources to help you learn more about AWS compliance. This includes an auditor learning path.
+
+### Denial-of-Service Attacks
+* DDOS (distributed denial-of-service) is an attack on security infrastructure. The objective is to shutdown an applications ability to function by overwhelming a system so it can no longer function.
+  * By overwhelming a machine, it denies service to others. It leverages other machines around the internet to do so.
+* UDP Flood is when a fake return address is used on the request. This address is the target, exhausting the network.
+  * Solution is security groups. They only allow in proper request traffic. Security groups operate at the AWS network level. The entire regions capacity can handle this.
+* HTTP Level Attacks look like normal customers requesting attention so that regular customers can't get in.
+* SLOWLORIS Attacks pretend to have a very slow connection. This blocks other users in the queue. Until the attacker gets the entire target, the cannot serve the next user.
+  * Using an ELB handles the HTTP traffic request first, so that the entire message is complete before sending it over to the front-end web server. ELB is scalable and runs at the region level.
+* AWS Shield with AWS WAF uses a web-application firewall to filter incoming traffic for the signature of bad actors. It uses machine learning to do so.
+  * AWS Shield Standard automatically protects all AWS customers at no cost. 
+  * AWS Shield Advanced is a paid service that provides detailed attack diagnostics and the ability to detect and mitigate sophisticated DDOS attacks. It also integrates with other services such as Amazon CloudFront, Amazon Route 53, and ELB.
+* DOS attacks orginate from a single source, while DDOS uses multiple sources.
+
+### Additional Security Services
+* Encyrption secures a message or data in a way that it can only be accessed by authorized parties.
+  * DynamoDB has server-side encryption at rest. This prevents unauthorized access. It also interacts with AWS Key Management Service. 
+  * In-transit data can be encrypted with SLL (Secure Sockets Layer) so that data is encrypted when passing. 
+* Amazon Inspector helps to improve security and compliance by running an automated security investigation against services.
+  * Network configuration reachability piece, amazon agent, and security inspection service. Potential security issues are shown in detail. 
+* Amazon GuardDuty analyzes continous streams of metadata from an account. Uses integrated threat intelligence to identify threats more accurately. Runs independently from other AWS services.
+* Amazon WAF lets you monitor network requests that come into your web applications. It uses a web acess control list (ACL) to protect your AWS resources.
+
+## Module 7 - Monitoring and Analytics
+
+### Introduction
+* You can observe systems, collect metrics, and then use that data to make decisions.
+  * For example, you can automatically scale instances if necessary or alert employees if consistent erros arise.
+
+### Amazon CloudWatch
+* You need visibility into the state of your systems for the success of your operations.
+* CloudWatch allows you to monitor AWS infrastructure and applications on AWS by monitoring metrics (variables).
+  * You can create a CloudWatch alarm. This is a threshold for a metric, when that threshold is reached, an action is performed.
+  * CloudWatch is integrated with SNS to send messages. 
+* The CloudWatch dashboard lists out metrics in near real-time. 
+* Benefits include access to all your metrics from a central location, gain visibility into your applications, infrastructure, and services, reduce mean time to repair (MTRR) and improve total cost of ownership (TCO), drive insights to optimize applications to their true potential.
+
+### AWS CloudTrail
+* An API auditing tool. Every request made to AWS gets logged in the CloudTrail engine. Records who made the request, when, where (IP address), response, denial/approval.
+* You can save these logs indefinetly in S3 buckets.
+* CloudTrail Insights allows you to detect unusual API activities in your AWS account.
+
+### AWS Trusted Advisor
+* An automated advisor that evaluates resources against 5 pillars: cost optimization, performance, security, fault tolerance, and service limits.
+* Compiles categorized items that you can look into.
+* Some checks are included free, others depend on your account tier.
+
+## Module 8 - Pricing and Support
+
+### Introduction
+* AWS provides a lot of free tools to help you plan and analyze your budgets for your AWS environments.
+
+### AWS Free Tier
+* Has always free, 12 months free, and trials for different types of services.
+* AWS Lambda has 1 million invocations free per month.
+* S3 is free for up to 12 months for 5gb of storage.
+* AWS Lightsail offers a 1 month trial of up to 750 hours of usage.
+* Amazon SageMaker, Amazon Comprehend Medical, Amazon DynamoDB, Amazon SNS, Amazon Cognito, and more are free-tier services.
+
+### AWS Pricing Concepts
+* As always, AWS offers pay for what you use.
+* Some services offer reservation options that provide a discount compared to on-demand instance pricing.
+* Some services offer tiered pricing, so the per-unit cost is incrementally lower with increased usage.
+* The AWS Pricing Calculator allows you to create an estimate for the cost of your use cases on AWS.
+
+### Billing Dashboard
+* You can see month-to-date spend, last month, current, and forecasted amount. 
+* You can also publish AWS Cost and Usage Reports.
+
+### Consolidated Billing
+* A singular company will likely have multiple AWS accounts. This can be managed by AWS Organizations.
+  * Instead of paying for every account, you can roll those bills into one bill for the owner of the organization. You just get one bill to manage.
+  * AWS offers bulk pricing, so you can get the bulk discount with the aggregate of all accounts. 
+  * Completely free.
 
 
 
