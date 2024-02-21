@@ -1,7 +1,7 @@
 ---
 title: AWS Cloud Practitioner Essentials
 created: '2024-02-15T22:39:37.666Z'
-modified: '2024-02-20T19:30:21.038Z'
+modified: '2024-02-21T17:27:07.379Z'
 ---
 
 # AWS Cloud Practitioner Essentials
@@ -463,6 +463,99 @@ modified: '2024-02-20T19:30:21.038Z'
   * AWS offers bulk pricing, so you can get the bulk discount with the aggregate of all accounts. 
   * Completely free.
 
+### AWS Budgets
+* To make sure you're tracking costs and within your limits, use AWS Budgets.
+* Lets you receive alerts when you exceed (or are forecasted to exceed) certain costs and usage limits
+  * You can set the percentage for the forecast.
+* AWS Console -> Budgets -> Create Budget -> Configure Alerts
 
+### AWS Cost Explorer
+* AWS Cost Explorer allows you to visually see and analyze how you're spending money.
+* Gives you 12 months of historical data.
+* You can group by attributes. Many resources are taggable, which are user-defined key-value pairs (e.g. specific project names).
+* You can create cost reports
 
+### AWS Support Plans
+* All businesses have support options available designed to fit custom needs.
+* Basic support is available by default. Provides 24/7 support, access to whitepapers, documentation, and support communities. 
+* AWS Developer support allows you to email access to customer support with 24 hours response time (or 12 hours if your systems are impaired).
+* AWS Business support includes direct phone access to cloud support engineers (4 hours if system is impaired, 1 hour if system is down).
+  * Infrastructure event management.
+* AWS Enterprise On-Ramp Support has a 30 minute response time for business critical workloads. Has access to Technical Account Managers (TAMs)
+* AWS Enterprise Support has all previous features, a 15 minute response time for business critical workloads. Also has a dedicated TAM.
+* TAMs provide expert engineering guidance, help you design solutions to integrate AWS services, assist with cost-effective and resilient architectures, and provide direct access to AWS programs and a broad community of experts.
 
+### AWS Marketplace
+* A digital catalogue to find, deploy, and manage third-party software for your architecture.
+* Customers have options such as one-click deployment.
+* Many vendors have pay-as-you-go options, free trials, and quick-start plans.
+* Categories include Infrastructure Software, DevOps, Data Products, Professional Services, Business Applications, Machine Learning, Industries, and Internet of Things (IoT).
+
+## Module 9 - Migration and Innovation
+
+### AWS Cloud Adoption Framework (AWS CAF)
+* Migrating to the cloud is a process.
+* Different roles have different tasks when it comes to a migration.
+* AWS CAF helps you manage the adoption process through guidance. 
+  * Six areas of perspective - business, people, governance, platform, security, operations.
+    * Each perspective is used to find gaps in your skills. This allows you to create an AWS CAF action plan that makes sense for your organization.
+
+### Migration Strategies
+* Every application will have six possible options when it comes to migrations (6 R's).
+  * Rehosting - lift and shift. You don't make any initial changes, pick up the applications and move them to AWS. Easier to optimize applications already in the cloud.
+  * Replatforming - lift, tinker, and shift. Instead of a pure 1:1, you make a few cloud optimizations. No new dev efforts are involved. 
+  * Retire - get rid of applications that are no longer useful.
+  * Retain - decide which applications you will move to AWS right away. Some applications may require refactoring before moving. These applications can be deprecated if necessary or wait to be moved.
+  * Repurchase - a fresh start. Move from a traditional license to a SaaS model. Must implement new software packages.
+  * Refactoring - writing new code. Driven by a strong business need for features or performance. Highest initial cost.
+
+### AWS Snow Family
+* The usual route to shift data is over the internet or a direct-connect line. This can take days, weeks, or month. 
+* AWS Snow Family are physical hardware devices.
+  * AWS Snowcone contains storage and edge computing (EC2 instances and Amazon GreenGrass). You get it shipped to you, upload data, ship it back, and data is uploaded (usually to S3).
+    * 2 CPUs, 4 GB of memory, and up to 14 TB of usable storage.
+  * AWS Snowball Edge comes in two versions: compute-optimized and storage-optimized. They fit into existing server racks and can even process data on the spot. Typically shipped to remote locations. Use cases include IoT streams and image compression.
+    * Storage contains 80 TB of HDD capacity for block volumes and S3 compatible object storage, and 1 TB of SATA SSD for block volumes.
+      * Contains 40 vCPUs and 80 GiB of memor to support Amazon EC2 sbe1 instances (C5)
+    * Compute contains 80 TB usable HDD capacity for S3 or EBS and 28 TB of NVMe SSD capacity.
+      * Contains 104 vCPUs, 416 GiB of memory, and an optional NVIDIA Tesla V100 GPU.
+  * AWS Snowmobile is hosted in a 45 foot shipping container. Houses 100 PB and ideal for the largest migrations and datacenter shutdowns. A network-attached storage device. Tamper resistant, waterproof, GPS tracking, fireproof, 24/7 video surveilance and a dedicated security team.
+* All Snow Family devices are secure and tamper resistant. Cryptographically signed and encrypted with 256-bit encryption.
+
+### Innovation with AWS
+* VMWare Cloud on AWS allows you to lift and shift direct software systems.
+* Amazon SageMaker allows you to quickly build, train, and deploy machine learning models. 
+* Amazon Augmented AI (Amazon A2I) provides a machine learning platform any business can build upon with no PhD.
+* Amazon Lex provides use for interactive chatbots. The heart of Alexa.
+* Amazon Textract allows you to analyze documents.
+* AWS DeepRacer allows you to experiment reinforcement learning. Done in a racing environment. 
+* AWS Ground Station allows you to use existing satellites. 
+
+## Module 10 - The Cloud Journey
+
+### Introduction
+* The AWS Well-Architected Framework has pillars such as operational excellence, security, reliability, performance efficiency, cost optimization, and sustainability.
+  * You use this framework to evaluate the architectures you build for excellence.
+
+### The AWS Well-Architected Framework
+* Operational Excellence - running and monitoring systems to ensure value.
+* Security - priority #1. Checks integrity of data and protects systems.
+* Reliability - recovery planning. How you handle change.
+* Performance Efficiency - using resources efficiently. Making informed decisions.
+* Cost Optimization - optimizing full cost. Controlling where money is spent.
+* Sustainability - minizing the environmental impacts. Reducing energy consumption.
+* The AWS Well-Architected Tool is free. You can run it against your account to discover areas that need to be addressed.
+
+### Benefits of the AWS Cloud
+* Trade fixed expense for variable expense. You have less of an investment until this investment starts to pay off.
+* Benefit from massive economies of scale. You have access to massive amounts of capacity all over the world. Cheaper than purchasing on your own.
+* Stop guessing capacity. No need to estimate capacity. You scale as your business needs require.
+* Increase speed and agility. You can easily try new things.
+* Stop spending money running and maintaining data centers. Focus on what makes your business valuable. 
+* Go global in minutes. You can expand operations to other countries without needing staff and data centers across seas. You can replicate architecture automated
+
+## Module 11 - AWS Certified Cloud Practitioner Basics
+
+### Exam Details
+* Four domains - cloud concepts (24%), security and compliance (30%), technology (34%), billing and pricing (12%).
+* 65 questions in 90 minutes. The minimum passing score is 70%. There are mutiple-choice and multiple-response questions.
